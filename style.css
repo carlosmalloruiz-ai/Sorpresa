@@ -1,76 +1,260 @@
 :root { 
     --accent: #ff0044; 
     --glass: rgba(255, 255, 255, 0.08); 
+    --text-glow: 0 0 12px rgba(255, 255, 255, 0.3);
 }
 
 * { 
-    margin: 0; padding: 0; box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
     -webkit-tap-highlight-color: transparent; 
     font-family: 'Space Grotesk', sans-serif;
 }
 
 body { 
-    background: #050505; color: #fff; 
-    overflow: hidden; height: 100vh; width: 100vw; 
+    background: #000; 
+    color: #fff; 
+    overflow: hidden; 
+    height: 100vh; 
+    width: 100vw; 
+    opacity: 0; /* Esto es correcto, lo encenderemos con JS */
 }
 
-/* El fondo ahora tiene un aura para que no sea negro total */
 #stage { 
-    position: fixed; inset: 0; z-index: 1; 
-    background: radial-gradient(circle at 50% 50%, #1a050a 0%, #050505 100%);
+    position: fixed; 
+    inset: 0; 
+    z-index: 1; 
+    background: radial-gradient(circle at 50% 50%, #1a050a 0%, #000 100%);
 }
 
+/* --- CARGADOR INICIAL --- */
 #loader {
-    position: fixed; inset: 0; z-index: 100;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    background: #050505;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    text-align: center;
 }
 
-/* Botón de inicio gigante para el móvil */
+.loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.hero-instruction {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: lowercase;
+}
+
 .trigger-btn-new {
-    width: 200px; height: 200px;
+    width: 180px;
+    height: 180px;
     border: 2px solid var(--accent);
     border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 30px rgba(255, 0, 68, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 0 20px rgba(255, 0, 68, 0.3);
     animation: pulse 2s infinite;
+    transition: all 0.4s ease;
+}
+
+.trigger-btn-new::after {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    border-radius: 50%;
+    background: var(--accent);
+    filter: blur(25px);
+    opacity: 0.15;
+    z-index: -1;
+}
+
+.trigger-text-new {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
 }
 
 @keyframes pulse {
     0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 0, 68, 0.4); }
-    50% { transform: scale(1.05); box-shadow: 0 0 50px rgba(255, 0, 68, 0.7); }
+    50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(255, 0, 68, 0.6); }
     100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 0, 68, 0.4); }
 }
 
+/* --- INTRO MUSICAL (MÁS ESPACIO) --- */
+#music-intro {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+}
+
+.intro-container {
+    position: relative;
+    width: 90vw; /* Ocupa más ancho */
+    max-width: 600px;
+    height: 500px; /* Contenedor más alto para separar arriba/abajo */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.glitch-text {
+    font-family: 'Syncopate', sans-serif;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    text-shadow: var(--text-glow);
+    opacity: 0;
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+.glitch-text.main { 
+    font-size: 1.4rem; 
+    letter-spacing: 6px; 
+    z-index: 5; 
+    margin: 40px 0; /* Espacio extra alrededor del título central */
+}
+
+.glitch-text.diagonal {
+    position: absolute;
+    font-size: 0.75rem;
+    width: 200px; /* Un poco más ancho para que el texto respire */
+    letter-spacing: 1.5px;
+    color: var(--accent);
+}
+
+/* Texto arriba a la izquierda - más lejos del centro */
+#text-left {
+    top: 5%; 
+    left: 0%;
+    transform: rotate(-12deg);
+    text-align: left;
+}
+
+/* Texto abajo a la derecha - más lejos del centro */
+#text-right {
+    bottom: 10%; 
+    right: 0%;
+    transform: rotate(8deg);
+    text-align: right;
+}
+
+.glitch-text.bottom {
+    margin-top: 80px; /* Mucho más separado de las barras */
+    font-size: 0.85rem;
+    letter-spacing: 5px;
+}
+
+/* --- VISUALIZADOR DE AUDIO --- */
+.music-bars {
+    display: flex;
+    gap: 8px;
+    height: 60px;
+    align-items: flex-end;
+}
+
+.bar {
+    width: 6px;
+    background: var(--accent);
+    border-radius: 3px;
+    animation: bounce 0.6s ease-in-out infinite alternate;
+}
+
+.bar:nth-child(2) { animation-delay: 0.1s; animation-duration: 0.8s; }
+.bar:nth-child(3) { animation-delay: 0.3s; animation-duration: 0.7s; }
+.bar:nth-child(4) { animation-delay: 0.2s; animation-duration: 0.9s; }
+
+@keyframes bounce {
+    from { height: 15px; opacity: 0.3; }
+    to { height: 60px; opacity: 1; filter: drop-shadow(0 0 8px var(--accent)); }
+}
+
+/* --- ESCENAS DE LA HISTORIA --- */
 .scene {
-    position: absolute; width: 85vw; max-width: 380px;
-    left: 50%; top: 50%; transform: translate(-50%, -50%);
-    background: var(--glass); backdrop-filter: blur(15px);
+    position: absolute;
+    width: 85vw;
+    max-width: 380px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--glass);
+    backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 30px; padding: 35px 25px;
-    text-align: center; z-index: 10; display: none;
+    border-radius: 30px;
+    padding: 35px 25px;
+    text-align: center;
+    z-index: 10;
+    display: none;
 }
 
-.scene.active { display: block; animation: slideIn 0.5s ease out; }
-
-@keyframes slideIn {
-    from { opacity: 0; transform: translate(-50%, -40%); }
-    to { opacity: 1; transform: translate(-50%, -50%); }
+.scene.active { 
+    display: block; 
 }
 
-h1 { font-family: 'Syncopate'; font-size: 1.1rem; color: var(--accent); margin-bottom: 20px; }
-p { font-size: 1rem; line-height: 1.6; margin-bottom: 30px; font-weight: 300; }
+h1 { 
+    font-family: 'Syncopate', sans-serif; 
+    font-size: 1.2rem; 
+    color: var(--accent); 
+    margin-bottom: 20px; 
+    letter-spacing: 4px;
+    text-shadow: 0 0 10px rgba(255, 0, 68, 0.2);
+}
 
-/* Botones adaptados al pulgar */
+p { 
+    font-size: 1rem; 
+    line-height: 1.6; 
+    margin-bottom: 30px; 
+    font-weight: 300; 
+}
+
+/* --- BOTONES --- */
 button {
-    width: 100%; padding: 18px; margin-bottom: 10px;
-    border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);
-    background: rgba(255,255,255,0.05); color: #fff;
-    font-size: 0.9rem; font-weight: 500;
+    width: 100%;
+    padding: 18px;
+    margin-bottom: 10px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: 0.3s;
 }
 
-.btn-confirm { background: var(--accent); border: none; font-weight: 700; letter-spacing: 1px; }
+button:active { 
+    transform: scale(0.98); 
+    background: rgba(255, 255, 255, 0.1); 
+}
+
+.btn-confirm { 
+    background: var(--accent); 
+    border: none; 
+    font-weight: 700; 
+    letter-spacing: 1px;
+    box-shadow: 0 5px 15px rgba(255, 0, 68, 0.3);
+}
 
 #btn-no {
     background: none;
@@ -78,7 +262,7 @@ button {
     color: rgba(255, 255, 255, 0.4);
     margin-top: 15px;
     font-size: 0.8rem;
-    position: relative; /* Importante para que GSAP lo mueva */
+    position: relative;
     z-index: 50;
-    padding: 15px; /* Zona táctil para que el código lo detecte antes */
+    padding: 15px;
 }

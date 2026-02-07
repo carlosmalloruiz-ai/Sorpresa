@@ -15,21 +15,40 @@
     <canvas id="stage"></canvas>
     <audio id="music-track" src="work.mp3" preload="auto" loop></audio>
 
-    <div id="loader" onclick="startExperience()">
-        <div class="hero-date" style="margin-bottom: 20px; opacity: 0.6; letter-spacing: 8px;">TOP SECRET</div>
-        <div class="trigger-btn-new">
-            <span class="trigger-text-new">¿TE ATREVES?</span>
+    <div id="loader">
+        <div class="loader-content">
+            <p class="hero-instruction">Hazme caso por una vez aunque sea<br>y sube el volumen</p>
+            <div class="trigger-btn-new" onclick="startExperience()">
+                <span class="trigger-text-new">Empezar</span>
+            </div>
         </div>
-        <p class="hint" style="margin-top: 30px; font-size: 0.8rem; opacity: 0.4;">Sube el volumen (va en serio)</p>
+    </div>
+
+    <div id="music-intro">
+        <div class="intro-container">
+            <div id="text-left" class="glitch-text diagonal">Exacto, tu canción favorita</div>
+            <div id="text-right" class="glitch-text diagonal">Supuestamente era mía, pero bueno te la dejo</div>
+
+            <h2 id="main-title" class="glitch-text main">¿Te suena?...</h2>
+
+            <div class="music-bars">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+
+            <div id="text-bottom" class="glitch-text bottom">BUENO EMPEZAMOS...</div>
+        </div>
     </div>
 
     <main id="story-flow">
-        <section class="scene active" id="s1">
+        <section class="scene" id="s1">
             <h1>CÓRDOBA</h1>
             <p>Recuerdo aquel día que iba con Antonio y de repente miré a un banco donde estabas tú sentada. Juraría que
                 me clavaste la mirada...</p>
             <div class="choice-box">
-                <button onclick="nextScene(2)">Te estaba fichando, obvio </button>
+                <button onclick="nextScene(2)">Te estaba fichando, obvio</button>
                 <button onclick="nextScene(2)">Ni te vi, egocéntrico</button>
             </div>
         </section>
@@ -38,7 +57,7 @@
             <h1>CEGATA</h1>
             <p>Pero claro, con tu miopía no me viste. Cuando me lo dijiste pensé: ¿Me voy a casar con un topo?</p>
             <div class="choice-box">
-                <button onclick="nextScene(3)">Efectivamente, soy un topo </button>
+                <button onclick="nextScene(3)">Efectivamente, soy un topo</button>
                 <button onclick="nextScene(3)">En verdad sí te vi...</button>
             </div>
         </section>
@@ -82,7 +101,7 @@
         </section>
 
         <section class="scene" id="s7">
-            <h1>¡PARAAAA!</h1>
+            <h1>¡PARAAA BOLUDAAA!</h1>
             <p>Jajajaja es broma. Esa propuesta me la curraré mil veces mejor en persona. No te voy a dar el privilegio
                 hoy.</p>
             <div class="choice-box">
